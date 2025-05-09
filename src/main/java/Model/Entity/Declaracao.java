@@ -1,11 +1,13 @@
 package Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,5 +33,7 @@ public class Declaracao {
     private double totalDeMateriais;
     @Column(nullable = false)
     private double totalDeCompensacao;
-
+    @OneToMany(mappedBy = "declaracao")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private List<ItensDaDeclaracao> itensDasDeclaracoes;
 }
