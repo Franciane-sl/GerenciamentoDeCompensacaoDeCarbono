@@ -24,5 +24,7 @@ public class ItensDaDeclaracao {
     @Column(nullable = false)
     private double percentualDeCompensacao;
     @Column(nullable = false)
+    private double toneladasDeclaradas;
+    @Column(nullable = false)
     private double toneladasCompensacao;
 }
