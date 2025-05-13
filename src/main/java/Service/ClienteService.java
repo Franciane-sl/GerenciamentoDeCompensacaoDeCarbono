@@ -27,4 +27,12 @@ public class ClienteService {
    public Cliente create(Cliente cliente){
        return clienteRepository.save(cliente);
    }
+
+   public Cliente update(Long id,Cliente clienteUpdate){
+       Cliente clienteExistente = findClienteById(id);
+       clienteExistente.setNome(clienteUpdate.getNome());
+       clienteExistente.setAtividadeEconomica(clienteUpdate.getAtividadeEconomica());
+       clienteExistente.setResponsavel(clienteUpdate.getResponsavel());
+       return clienteRepository.save(clienteExistente);
+   }
 }
