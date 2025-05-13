@@ -1,6 +1,7 @@
 package Service;
 
 import Model.Entity.Cliente;
+import Model.Exceptions.ResourceNotFoundException;
 import Repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class ClienteService {
        return clienteRepository.findById(id).orElseThrow(
                () -> new ResourceNotFoundException("O cliente não foi encontrado pelo id" + id)
        );
+   }
+
+   public Cliente create(Cliente cliente){
+       return clienteRepository.save(cliente);
    }
 }
