@@ -15,5 +15,11 @@ public class ClienteService {
 
    public List<Cliente> findAllClientes(){
        return clienteRepository.findAll();
-    }
+   }
+
+   public Cliente findClienteById(Long id){
+       return clienteRepository.findById(id).orElseThrow(
+               () -> new ResourceNotFoundException("O cliente não foi encontrado pelo id" + id)
+       );
+   }
 }
