@@ -20,7 +20,7 @@ public class ClienteService {
 
    public Cliente findClienteById(Long id){
        return clienteRepository.findById(id).orElseThrow(
-               () -> new ResourceNotFoundException("O cliente não foi encontrado pelo id" + id)
+               () -> new ResourceNotFoundException("O cliente não foi encontrado pelo id " + id)
        );
    }
 
@@ -34,5 +34,10 @@ public class ClienteService {
        clienteExistente.setAtividadeEconomica(clienteUpdate.getAtividadeEconomica());
        clienteExistente.setResponsavel(clienteUpdate.getResponsavel());
        return clienteRepository.save(clienteExistente);
+   }
+
+   public void delete(Long id){
+       Cliente cliente = findClienteById(id);
+       clienteRepository.delete(cliente);
    }
 }
