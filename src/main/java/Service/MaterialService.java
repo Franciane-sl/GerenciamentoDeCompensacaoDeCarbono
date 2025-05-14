@@ -1,6 +1,7 @@
 package Service;
 
 import Model.Entity.Material;
+import Model.Exceptions.ResourceNotFoundException;
 import Repository.MaterialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,11 @@ public class MaterialService {
 
     public List<Material> findAllMaterial(){
         return materialRepository.findAll();
+    }
+
+    public Material findMaterialById(Long id) {
+        return materialRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("O material não foi encontrado pelo id " + id)
+        );
     }
 }
