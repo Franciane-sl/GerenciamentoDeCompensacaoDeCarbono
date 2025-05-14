@@ -23,4 +23,8 @@ public class MaterialService {
                 () -> new ResourceNotFoundException("O material não foi encontrado pelo id " + id)
         );
     }
+
+    public Material create(Material material){
+        return materialRepository.save(material);
+    }
 }
