@@ -32,6 +32,11 @@ public class MaterialService {
         Material materialExistente = findMaterialById(id);
         materialExistente.setNome(materialUpdate.getNome());
         materialExistente.setPercentualDeCompensacao(materialUpdate.getPercentualDeCompensacao());
-        return materialRepository.save(materialExistente;
+        return materialRepository.save(materialExistente);
+    }
+
+    public void delete(Long id){
+        Material material = findMaterialById(id);
+        materialRepository.delete(material);
     }
 }
