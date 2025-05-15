@@ -98,4 +98,9 @@ public class DeclaracaoService {
 
         return declaracaoSalva;
     }
+
+    public void delete(Long id){
+        Declaracao declaracao = findDeclaracaoById(id);
+        declaracaoRepository.delete(declaracao);
+    }
 }
