@@ -38,6 +38,12 @@ public class DeclaracaoService {
         return declaracaoRepository.findAll();
     }
 
+    public Declaracao findDeclaracaoById(Long id){
+        return declaracaoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("A declaração não foi encontrada pelo id. " + id)
+        );
+    }
+
     public Declaracao create(RequestDeclaracaoDTO dto){
 
         Cliente cliente = clienteRepository.findById(dto.getClienteId()).orElseThrow(
