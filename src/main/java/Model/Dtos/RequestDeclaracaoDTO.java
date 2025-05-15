@@ -1,5 +1,6 @@
 package Model.Dtos;
 
+import Model.Entity.ItensDaDeclaracao;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,20 +22,11 @@ public class RequestDeclaracaoDTO {
 
     @NotNull
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @FutureOrPresent(message = "A data da declaração deve ser atual ou estar futuro.")
-    private LocalDate dataDaDeclaracao;
-
-    @NotNull
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate dataInicialDoPeriodo;
 
     @NotNull
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate dataFinalDoPeriodo;
 
-    @PositiveOrZero(message = "O total de materiais não pode ser negativo.")
-    private double totalDeMateriais;
-
-    @PositiveOrZero(message = "O total de compensação deve ser positivo.")
-    private double totalDeCompensacao;
+    private List<RequestItensDaDeclaracaoDTO> itens;
 }
