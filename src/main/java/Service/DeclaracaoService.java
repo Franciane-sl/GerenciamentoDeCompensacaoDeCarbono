@@ -34,6 +34,10 @@ public class DeclaracaoService {
     @Autowired
     private ItensDaDeclaracaoRepository itensDaDeclaracaoRepository;
 
+    public List<Declaracao> findAllDeclaracao(){
+        return declaracaoRepository.findAll();
+    }
+
     public Declaracao create(RequestDeclaracaoDTO dto){
 
         Cliente cliente = clienteRepository.findById(dto.getClienteId()).orElseThrow(
@@ -88,5 +92,4 @@ public class DeclaracaoService {
 
         return declaracaoSalva;
     }
-
 }
