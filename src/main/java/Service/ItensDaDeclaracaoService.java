@@ -12,7 +12,7 @@ import java.util.List;
 public class ItensDaDeclaracaoService {
 
     @Autowired
-    ItensDaDeclaracaoRepository itensDaDeclaracaoRepository;
+     private ItensDaDeclaracaoRepository itensDaDeclaracaoRepository;
 
     public List<ItensDaDeclaracao> findAllItensDaDeclaracao(){
         return itensDaDeclaracaoRepository.findAll();
@@ -22,5 +22,14 @@ public class ItensDaDeclaracaoService {
         return itensDaDeclaracaoRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("O item não foi encontrado pelo id. " + id)
         );
+    }
+
+    public ItensDaDeclaracao create(ItensDaDeclaracao itensDaDeclaracao){
+        return itensDaDeclaracaoRepository.save(itensDaDeclaracao);
+    }
+
+    public void delete(Long id){
+        ItensDaDeclaracao itensDaDeclaracao = findItensDaDeclaracaoById(id);
+        itensDaDeclaracaoRepository.delete(itensDaDeclaracao);
     }
 }
