@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DashbordDTO {
+public class DashboardDTO {
 
     private String nomeMaterial;
     private double totalToneladasCompensadas;
