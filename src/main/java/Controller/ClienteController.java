@@ -49,4 +49,10 @@ public class ClienteController {
 
         return ResponseEntity.ok(clienteUpdateDTO);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        this.clienteService.delete(id);
+        return ResponseEntity.ok("O cliente foi deletado com sucesso.");
+    }
 }
