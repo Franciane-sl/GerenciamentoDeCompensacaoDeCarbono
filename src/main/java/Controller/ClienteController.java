@@ -40,4 +40,13 @@ public class ClienteController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteCriadoDTO);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseClienteDTO> update(@PathVariable Long id, @RequestBody @Valid RequestClienteDTO clienteDTO) throws Exception{
+        Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
+        Cliente clienteUpdate = clienteService.update(id, cliente);
+        ResponseClienteDTO clienteUpdateDTO = modelMapper.map(clienteUpdate, ResponseClienteDTO.class);
+
+        return ResponseEntity.ok(clienteUpdateDTO);
+    }
 }
