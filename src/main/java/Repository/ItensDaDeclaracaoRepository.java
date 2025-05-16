@@ -1,5 +1,6 @@
 package Repository;
 
+import Model.Dtos.DashboardDTO;
 import Model.Entity.ItensDaDeclaracao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,10 @@ public interface ItensDaDeclaracaoRepository extends JpaRepository<ItensDaDeclar
             @Param("dataInicial") LocalDate dataInicial,
             @Param("dataFinal") LocalDate dataFinal
             );
+
+    @Query("SELECT new Model.Dtos.DashboardDTO(m.nome, SUM(i.toneladasCompensacao)) " +
+            "FROM ItensDaDeclaracao i JOIN i.material m " +
+            "GROUP BY m.nome")
+    List<DashboardDTO> buscarTotaisDashboard();
+
 }
