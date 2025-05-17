@@ -1,0 +1,106 @@
+package com.futurodevV2.GerenciamentoDeCarbono.Service;
+
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.RequestDeclaracaoDTO;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.RequestItensDaDeclaracaoDTO;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.Cliente;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.Declaracao;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.ItensDaDeclaracao;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.Material;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Exceptions.BadRequestException;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Exceptions.ResourceNotFoundException;
+import com.futurodevV2.GerenciamentoDeCarbono.Repository.ClienteRepository;
+import com.futurodevV2.GerenciamentoDeCarbono.Repository.DeclaracaoRepository;
+import com.futurodevV2.GerenciamentoDeCarbono.Repository.ItensDaDeclaracaoRepository;
+import com.futurodevV2.GerenciamentoDeCarbono.Repository.MaterialRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class DeclaracaoService {
+
+    @Autowired
+    private DeclaracaoRepository declaracaoRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @Autowired
+    private MaterialRepository materialRepository;
+
+    @Autowired
+    private ItensDaDeclaracaoRepository itensDaDeclaracaoRepository;
+
+    public List<Declaracao> findAllDeclaracao(){
+        return declaracaoRepository.findAll();
+    }
+
+    public Declaracao findDeclaracaoById(Long id){
+        return declaracaoRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("A declaração não foi encontrada pelo id. " + id)
+        );
+    }
+
+    public Declaracao create(RequestDeclaracaoDTO dto){
+
+        Cliente cliente = clienteRepository.findById(dto.getClienteId()).orElseThrow(
+                () -> new ResourceNotFoundException("O cliente não foi encontrado pelo id: " + dto.getClienteId())
+        );
+
+        if (dto.getDataInicialDoPeriodo().isAfter(dto.getDataFinalDoPeriodo())){
+            throw new BadRequestException("A data inicial do periodo deve ser menor que a data final.");
+        }
+
+        Declaracao declaracao = new Declaracao();
+        declaracao.setCliente(cliente);
+        declaracao.setDataDaDeclaracao(LocalDate.now());
+        declaracao.setDataInicialDoPeriodo(dto.getDataInicialDoPeriodo());
+        declaracao.setDataFinalDoPeriodo(dto.getDataFinalDoPeriodo());
+
+        List<ItensDaDeclaracao> itensSalvos = new ArrayList<>();
+        double totalDeMateriais = 0;
+        double totalDeCompensacao = 0;
+
+        for(RequestItensDaDeclaracaoDTO itemDTO : dto.getItens()){
+
+                if (itemDTO.getToneladasDeclaradas() <= 0){
+                    throw new BadRequestException("As toneladas declaradas devem ser maiores que zero.");
+                }
+
+                Material material = materialRepository.findById(itemDTO.getMaterialId()).orElseThrow(
+                        () -> new ResourceNotFoundException("Material não encontrado com ID: " + itemDTO.getMaterialId()));
+
+                double percentual = material.getPercentualDeCompensacao();
+                double toneladasCompensacao = itemDTO.getToneladasDeclaradas() * percentual / 100;
+
+                ItensDaDeclaracao item = new ItensDaDeclaracao();
+                item.setDeclaracao(declaracao);
+                item.setMaterial(material);
+                item.setPercentualDeCompensacao(percentual);
+                item.setToneladasDeclaradas(itemDTO.getToneladasDeclaradas());
+                item.setToneladasCompensacao(toneladasCompensacao);
+
+                totalDeMateriais += itemDTO.getToneladasDeclaradas();
+                totalDeCompensacao += toneladasCompensacao;
+
+                itensSalvos.add(item);
+        }
+
+        declaracao.setTotalDeMateriais(totalDeMateriais);
+        declaracao.setTotalDeCompensacao(totalDeCompensacao);
+        declaracao.setItensDasDeclaracoes(itensSalvos);
+
+        Declaracao declaracaoSalva = declaracaoRepository.save(declaracao);
+        itensDaDeclaracaoRepository.saveAll(itensSalvos);
+
+        return declaracaoSalva;
+    }
+
+    public void delete(Long id){
+        Declaracao declaracao = findDeclaracaoById(id);
+        declaracaoRepository.delete(declaracao);
+    }
+}
