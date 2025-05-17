@@ -32,6 +32,13 @@ public class ClienteController {
         return clientes.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(clientes);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseClienteDTO> getById(@PathVariable Long id){
+        Cliente cliente = clienteService.findClienteById(id);
+        ResponseClienteDTO clienteDTO =  modelMapper.map(cliente, ResponseClienteDTO.class);
+        return ResponseEntity.ok(clienteDTO);
+    }
+
     @PostMapping
     public ResponseEntity<ResponseClienteDTO> create(@RequestBody @Valid RequestClienteDTO clienteDTO) throws Exception{
         Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
