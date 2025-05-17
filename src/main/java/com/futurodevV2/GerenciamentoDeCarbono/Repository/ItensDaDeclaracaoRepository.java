@@ -23,7 +23,7 @@ public interface ItensDaDeclaracaoRepository extends JpaRepository<ItensDaDeclar
             @Param("dataFinal") LocalDate dataFinal
             );
 
-    @Query("SELECT new Model.Dtos.DashboardDTO(m.nome, SUM(i.toneladasCompensacao)) " +
+    @Query("SELECT new com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.DashboardDTO(m.nome, SUM(i.toneladasCompensacao)) " +
             "FROM ItensDaDeclaracao i JOIN i.material m " +
             "GROUP BY m.nome")
     List<DashboardDTO> buscarTotaisDashboard();
