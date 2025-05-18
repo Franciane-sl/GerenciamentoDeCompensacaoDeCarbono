@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/itensDaDeclaracao")
+@RequestMapping("/itensDasDeclaracoes")
 public class ItensDaDeclaracaoController {
 
     @Autowired
