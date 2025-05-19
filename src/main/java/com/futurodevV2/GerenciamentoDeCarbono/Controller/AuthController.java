@@ -1,5 +1,6 @@
 package com.futurodevV2.GerenciamentoDeCarbono.Controller;
 
+import com.futurodevV2.GerenciamentoDeCarbono.Configuration.JwtUtil;
 import com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.AuthRequest;
 import com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.AuthResponse;
 import com.futurodevV2.GerenciamentoDeCarbono.Service.UserDetailsServiceImpl;
