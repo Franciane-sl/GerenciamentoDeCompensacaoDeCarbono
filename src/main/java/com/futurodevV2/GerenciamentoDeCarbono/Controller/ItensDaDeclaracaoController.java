@@ -2,8 +2,12 @@ package com.futurodevV2.GerenciamentoDeCarbono.Controller;
 
 import com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.RequestItensDaDeclaracaoDTO;
 import com.futurodevV2.GerenciamentoDeCarbono.Model.Dtos.ResponseItensDaDeclaracaoDTO;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.Declaracao;
 import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.ItensDaDeclaracao;
+import com.futurodevV2.GerenciamentoDeCarbono.Model.Entity.Material;
+import com.futurodevV2.GerenciamentoDeCarbono.Service.DeclaracaoService;
 import com.futurodevV2.GerenciamentoDeCarbono.Service.ItensDaDeclaracaoService;
+import com.futurodevV2.GerenciamentoDeCarbono.Service.MaterialService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,12 @@ public class ItensDaDeclaracaoController {
 
     @Autowired
     private ItensDaDeclaracaoService itensDaDeclaracaoService;
+
+    @Autowired
+    private DeclaracaoService declaracaoService;
+
+    @Autowired
+    private MaterialService materialService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -40,12 +50,21 @@ public class ItensDaDeclaracaoController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseItensDaDeclaracaoDTO> create(@RequestBody @Valid RequestItensDaDeclaracaoDTO itensDaDeclaracaoDTO){
-        ItensDaDeclaracao itensDaDeclaracao = modelMapper.map(itensDaDeclaracaoDTO, ItensDaDeclaracao.class);
-        ItensDaDeclaracao itemCriado = itensDaDeclaracaoService.create(itensDaDeclaracao);
-        ResponseItensDaDeclaracaoDTO itemCriadoDTO = modelMapper.map(itemCriado, ResponseItensDaDeclaracaoDTO.class);
+    public ResponseEntity<ResponseItensDaDeclaracaoDTO> create(@RequestBody @Valid RequestItensDaDeclaracaoDTO dto) {
+        ItensDaDeclaracao item = new ItensDaDeclaracao();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(itemCriadoDTO);
+        Declaracao declaracao = declaracaoService.findDeclaracaoById(dto.getDeclaracaoId());
+        Material material = materialService.findMaterialById(dto.getMaterialId());
+
+        item.setDeclaracao(declaracao);
+        item.setMaterial(material);
+        item.setToneladasDeclaradas(dto.getToneladasDeclaradas());
+        item.setToneladasCompensacao(dto.getToneladasCompensacao());
+        item.setPercentualDeCompensacao(dto.getPercentualDeCompensacao());
+
+        ItensDaDeclaracao salvo = itensDaDeclaracaoService.create(item);
+        ResponseItensDaDeclaracaoDTO response = modelMapper.map(salvo, ResponseItensDaDeclaracaoDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")
