@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class RequestItensDaDeclaracaoDTO {
 
     @NotNull(message = "O id da declaração é obrigatório.")
-    private Long declaracaoID;
+    private Long declaracaoId;
 
     @NotNull(message = "O id do material é obrigatório.")
     private Long materialId;
