@@ -29,9 +29,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest){
         try{
-            UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.username());
+            UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
 
-            if(userService.validatePassword(authRequest.password(), userDetails.getPassword())){
+            if(userService.validatePassword(authRequest.getPassword(), userDetails.getPassword())){
                 String token = jwtUtil.generateToken(userDetails);
                 return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername()));
             }else{
